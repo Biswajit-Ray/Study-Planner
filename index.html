@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyMap — Exam Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div>
+      <div class="logo">Study<span>Map</span></div>
+      <div class="tagline">Exam Planner — No excuses edition</div>
+    </div>
+    <button class="dark-toggle" onclick="toggleTheme()">☀ Light</button>
+  </header>
+
+  <!-- Quote -->
+  <div class="quote-bar" id="quote-bar"></div>
+
+  <!-- Step 1: Add Subjects -->
+  <div class="card">
+    <div class="section-title">Add Your Subjects <span class="pill">STEP 1</span></div>
+    <div class="form-row" id="add-form">
+      <div class="form-group">
+        <label>Subject Name</label>
+        <input type="text" id="sub-name" placeholder="e.g. Mathematics" maxlength="40">
+      </div>
+      <div class="form-group">
+        <label>Exam Date</label>
+        <input type="date" id="sub-date">
+      </div>
+      <div class="confidence-group">
+        <label style="font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;font-weight:700;">Confidence</label>
+        <div class="conf-options">
+          <button class="conf-btn active-low" data-val="low" onclick="selectConf(this)" title="Low">😬</button>
+          <button class="conf-btn" data-val="mid" onclick="selectConf(this)" title="Medium">😐</button>
+          <button class="conf-btn" data-val="high" onclick="selectConf(this)" title="High">😎</button>
+        </div>
+      </div>
+      <button class="btn btn-add" onclick="addSubject()">+ Add</button>
+    </div>
+    <div id="subject-list"></div>
+  </div>
+
+  <!-- Step 2: Options -->
+  <div class="card">
+    <div class="section-title">Study Settings <span class="pill">STEP 2</span></div>
+    <div class="options-grid">
+      <div class="opt-group">
+        <label class="form-group" style="display:flex;flex-direction:column;gap:5px;">
+          <span style="font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;font-weight:700;">Hours available per day</span>
+          <input type="text" id="hours-day" value="4" style="max-width:80px;" maxlength="3">
+        </label>
+      </div>
+      <div class="opt-group">
+        <label class="form-group" style="display:flex;flex-direction:column;gap:5px;">
+          <span style="font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;font-weight:700;">Study starts from</span>
+          <input type="date" id="start-date">
+        </label>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="generateSchedule()" style="margin-top:18px;">Generate My Study Plan →</button>
+  </div>
+
+  <!-- Pomodoro (hidden until plan generated) -->
+  <div id="pomodoro-section" style="display:none;">
+    <div class="section-title" style="margin-bottom:14px;">Pomodoro Timer <span class="pill">FOCUS</span></div>
+    <div class="pomo-label" id="pomo-label">Work Session</div>
+    <div class="pomo-display" id="pomo-display">25:00</div>
+    <div class="pomo-controls">
+      <button class="pomo-btn" onclick="startPomo()">▶ Start</button>
+      <button class="pomo-btn" onclick="pausePomo()">⏸ Pause</button>
+      <button class="pomo-btn" onclick="resetPomo()">↺ Reset</button>
+    </div>
+    <div class="pomo-sessions" id="pomo-sessions">Sessions completed today: 0</div>
+  </div>
+
+  <!-- Step 3: Schedule Output -->
+  <div id="schedule-section">
+    <div class="schedule-header">
+      <div class="section-title" style="margin:0;">Your Study Plan <span class="pill">GENERATED</span></div>
+      <div class="schedule-actions">
+        <button class="btn btn-ghost" onclick="copyPlan()">📋 Copy Plan</button>
+        <button class="btn btn-ghost" onclick="clearSchedule()">✕ Reset</button>
+      </div>
+    </div>
+    <div class="progress-section">
+      <div class="progress-label">
+        <span>Sessions completed</span>
+        <span id="progress-text">0 / 0</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+    <div id="schedule-output"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
