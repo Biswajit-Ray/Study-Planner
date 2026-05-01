@@ -121,7 +121,7 @@ function generateSchedule() {
   const subjectHours = {};
   sorted.forEach(s => {
     const days = Math.max(1, Math.ceil((new Date(s.date) - startDate) / 86400000));
-    const weight = CONF_WEIGHT[s.conf] * (1 / days) * 10;
+    const weight = CONF_WEIGHT[s.conf] * (1 / (days*days)) * 10;
     subjectHours[s.id] = Math.max(1, Math.round((weight / totalWeight) * hoursPerDay * totalDays * 0.8));
   });
 
