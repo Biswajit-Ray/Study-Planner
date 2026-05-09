@@ -1,106 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StudyMap — Exam Planner</title>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyMap — Exam Planner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
 </head>
-<body>
+<body class="dark">
 
 <div class="container">
-  <header>
-    <div>
-      <div class="logo">Study<span>Map</span></div>
-      <div class="tagline">Exam Planner — No excuses edition</div>
-    </div>
-    <button class="dark-toggle" onclick="toggleTheme()">☀ Light</button>
-  </header>
-
-  <!-- Quote -->
-  <div class="quote-bar" id="quote-bar"></div>
-
-  <!-- Step 1: Add Subjects -->
-  <div class="card">
-    <div class="section-title">Add Your Subjects <span class="pill">STEP 1</span></div>
-    <div class="form-row" id="add-form">
-      <div class="form-group">
-        <label>Subject Name</label>
-        <input type="text" id="sub-name" placeholder="e.g. Mathematics" maxlength="40">
-      </div>
-      <div class="form-group">
-        <label>Exam Date</label>
-        <input type="date" id="sub-date">
-      </div>
-      <div class="confidence-group">
-        <label style="font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;font-weight:700;">Confidence</label>
-        <div class="conf-options">
-          <button class="conf-btn active-low" data-val="low" onclick="selectConf(this)" title="Low">😬</button>
-          <button class="conf-btn" data-val="mid" onclick="selectConf(this)" title="Medium">😐</button>
-          <button class="conf-btn" data-val="high" onclick="selectConf(this)" title="High">😎</button>
+    <header>
+        <div>
+            <div class="logo">Study<span>Map</span></div>
+            <div class="tagline">Exam Planner — No excuses edition</div>
         </div>
-      </div>
-      <button class="btn btn-add" onclick="addSubject()">+ Add</button>
-    </div>
-    <div id="subject-list"></div>
-  </div>
+        <button class="dark-toggle" id="theme-btn" onclick="toggleTheme()">☀ Light</button>
+    </header>
 
-  <!-- Step 2: Options -->
-  <div class="card">
-    <div class="section-title">Study Settings <span class="pill">STEP 2</span></div>
-    <div class="options-grid">
-      <div class="opt-group">
-        <label class="form-group" style="display:flex;flex-direction:column;gap:5px;">
-          <span style="font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;font-weight:700;">Hours available per day</span>
-          <input type="text" id="hours-day" value="4" style="max-width:80px;" maxlength="3">
-        </label>
-      </div>
-      <div class="opt-group">
-        <label class="form-group" style="display:flex;flex-direction:column;gap:5px;">
-          <span style="font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;font-weight:700;">Study starts from</span>
-          <input type="date" id="start-date">
-        </label>
-      </div>
-    </div>
-    <button class="btn btn-primary" onclick="generateSchedule()" style="margin-top:18px;">Generate My Study Plan →</button>
-  </div>
+    <div class="layout-grid">
+        <!-- -->
+        <main class="main-content">
+            <div class="vintage-frame" id="quote-card">
+                <svg class="carving carving-tl" viewBox="0 0 100 100"><path d="M0,0 L100,0 L100,10 L10,10 L10,100 L0,100 Z M20,20 L80,20 L80,30 L30,30 L30,80 L20,80 Z"/></svg>
+                <svg class="carving carving-tr" viewBox="0 0 100 100"><path d="M0,0 L100,0 L100,10 L10,10 L10,100 L0,100 Z M20,20 L80,20 L80,30 L30,30 L30,80 L20,80 Z"/></svg>
+                <svg class="carving carving-bl" viewBox="0 0 100 100"><path d="M0,0 L100,0 L100,10 L10,10 L10,100 L0,100 Z M20,20 L80,20 L80,30 L30,30 L30,80 L20,80 Z"/></svg>
+                <svg class="carving carving-br" viewBox="0 0 100 100"><path d="M0,0 L100,0 L100,10 L10,10 L10,100 L0,100 Z M20,20 L80,20 L80,30 L30,30 L30,80 L20,80 Z"/></svg>
+                <div class="carving-mid-top">❧</div>
+                <div id="main-quote" style="font-family: 'Instrument Serif', serif; font-size: 1.6rem; margin-bottom: 15px; font-style: italic; line-height: 1.4; position: relative; z-index: 2;">"Loading inspiration..."</div>
+                <div id="main-author" style="font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--accent); text-transform: uppercase; margin-bottom: 20px; letter-spacing: 0.1em; position: relative; z-index: 2;"></div>
+                <button class="btn btn-ghost" onclick="newQuote()" style="font-size: 0.7rem; padding: 6px 14px; position: relative; z-index: 2; border-color: var(--accent); color: var(--accent);">✨ Refresh Wisdom</button>
+            </div>
 
-  <!-- Pomodoro (hidden until plan generated) -->
-  <div id="pomodoro-section" style="display:none;">
-    <div class="section-title" style="margin-bottom:14px;">Pomodoro Timer <span class="pill">FOCUS</span></div>
-    <div class="pomo-label" id="pomo-label">Work Session</div>
-    <div class="pomo-display" id="pomo-display">25:00</div>
-    <div class="pomo-controls">
-      <button class="pomo-btn" onclick="startPomo()">▶ Start</button>
-      <button class="pomo-btn" onclick="pausePomo()">⏸ Pause</button>
-      <button class="pomo-btn" onclick="resetPomo()">↺ Reset</button>
-    </div>
-    <div class="pomo-sessions" id="pomo-sessions">Sessions completed today: 0</div>
-  </div>
+            <div class="card">
+                <div class="section-title">Add Your Subjects <span class="pill">STEP 1</span></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Subject Name</label>
+                        <input type="text" id="sub-name" placeholder="e.g. Physics" maxlength="40">
+                    </div>
+                    <div class="form-group">
+                        <label>Exam Date</label>
+                        <input type="date" id="sub-date">
+                    </div>
+                    <div class="form-group">
+                        <label>Confidence</label>
+                        <div class="conf-options">
+                            <button class="conf-btn active-low" data-val="low" onclick="selectConf(this)" title="Low">😬</button>
+                            <button class="conf-btn" data-val="mid" onclick="selectConf(this)" title="Medium">😐</button>
+                            <button class="conf-btn" data-val="high" onclick="selectConf(this)" title="High">😎</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-add" onclick="addSubject()">+ Add</button>
+                </div>
+                <div id="subject-list"></div>
+            </div>
 
-  <!-- Step 3: Schedule Output -->
-  <div id="schedule-section">
-    <div class="schedule-header">
-      <div class="section-title" style="margin:0;">Your Study Plan <span class="pill">GENERATED</span></div>
-      <div class="schedule-actions">
-        <button class="btn btn-ghost" onclick="copyPlan()">📋 Copy Plan</button>
-        <button class="btn btn-ghost" onclick="clearSchedule()">✕ Reset</button>
-      </div>
+            <div class="card">
+                <div class="section-title">Study Settings <span class="pill">STEP 2</span></div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                    <div class="form-group">
+                        <label>Hours per day</label>
+                        <input type="number" id="hours-day" value="4" min="1" max="14">
+                    </div>
+                    <div class="form-group">
+                        <label>Start From</label>
+                        <input type="date" id="start-date">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="generateSchedule()">Generate My Study Plan →</button>
+            </div>
+
+            <div id="pomodoro-section" style="display:none;">
+                <div class="section-title" style="justify-content:center;">Focus Timer <span class="pill">POMODORO</span></div>
+                <div id="pomo-label" style="font-size:0.8rem; color:var(--muted); text-transform:uppercase; letter-spacing: 0.1em;">Work Session</div>
+                <div class="pomo-display" id="pomo-display">25:00</div>
+                <div style="display:flex; gap:12px; justify-content:center;">
+                    <button class="btn btn-ghost" onclick="togglePomo()" id="pomo-run-btn">▶ Start</button>
+                    <button class="btn btn-ghost" onclick="resetPomo()">↺ Reset</button>
+                </div>
+            </div>
+
+            <div id="schedule-section">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap: wrap; gap:10px;">
+                    <div class="section-title" style="margin:0;">Your Plan <span class="pill">STEP 3</span></div>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn btn-ghost" onclick="copyPlan()">📋 Copy Plan</button>
+                        <button class="btn btn-ghost" onclick="clearSchedule()">✕ Clear</button>
+                    </div>
+                </div>
+                <div class="progress-section">
+                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; color:var(--muted);">
+                        <span>Overall Completion</span>
+                        <span id="progress-text">0 / 0</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+                </div>
+                <div id="schedule-output"></div>
+            </div>
+        </main>
+
+        <!-- -->
+        <aside class="sidebar">
+            <div class="classic-sidebar-card">
+                <svg class="sidebar-carving sidebar-tl" viewBox="0 0 100 100"><path d="M0,0 L100,0 L100,10 L10,10 L10,100 L0,100 Z"/></svg>
+                <svg class="sidebar-carving sidebar-tr" viewBox="0 0 100 100"><path d="M0,0 L100,0 L100,10 L10,10 L10,100 L0,100 Z"/></svg>
+                <svg class="sidebar-carving sidebar-bl" viewBox="0 0 100 100"><path d="M0,0 L100,0 L100,10 L10,10 L10,100 L0,100 Z"/></svg>
+                <svg class="sidebar-carving sidebar-br" viewBox="0 0 100 100"><path d="M0,0 L100,0 L100,10 L10,10 L10,100 L0,100 Z"/></svg>
+                
+                <div class="classic-title">❧ Brain Dump</div>
+                <textarea id="quick-notes" placeholder="Formulas, keywords, or thoughts..." oninput="saveNotes()"></textarea>
+                <div style="margin-top: 15px; font-size: 0.65rem; font-family: 'DM Mono'; color: var(--muted); text-align: center; opacity: 0.7; font-style: italic;">
+                    A space to take ur notes.
+                </div>
+            </div>
+        </aside>
     </div>
-    <div class="progress-section">
-      <div class="progress-label">
-        <span>Sessions completed</span>
-        <span id="progress-text">0 / 0</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-    </div>
-    <div id="schedule-output"></div>
-  </div>
 </div>
 
 <div id="toast"></div>
 
-<script src="engine.js"></script>
+
+<script src="script.js">
+    
+</script>
 </body>
 </html>
